@@ -3,7 +3,8 @@
 from __future__ import division, unicode_literals, print_function, absolute_import
 
 from pint.util import (UnitsContainer)
-from pint.converters import (ScaleConverter, OffsetConverter)
+from pint.converters import (ScaleConverter, OffsetConverter,
+                             LogarithmicConverter)
 from pint.definitions import (Definition, PrefixDefinition, UnitDefinition,
                               DimensionDefinition)
 
@@ -69,6 +70,28 @@ class TestDefinition(BaseTestCase):
         self.assertEqual(x.converter.scale, 9/5)
         self.assertEqual(x.converter.offset, 255.372222)
         self.assertEqual(x.reference, UnitsContainer(kelvin=1))
+
+        # print('\ndBm = mW; logbase: 10; factor: 10')  # TBR
+        x = Definition.from_string('dBm = mW; logbase: 10; factor: 10')
+
+        # print('\ndBW = W; logbase: 10; factor: 10')  # TBR
+        x = Definition.from_string('dBW = W; logbase: 10; factor: 10')
+
+        # print('\ndBV = V; logbase: 10; factor: 20')  # TBR
+        x = Definition.from_string('dBV = V; logbase: 10; factor: 20')
+
+        # print('\ndBSPL = 20 * uPa; logbase: 10; factor: 20')  # TBR
+        x = Definition.from_string('dBSPL = 20 * uPa; logbase: 10; factor: 20')
+
+        x = Definition.from_string('dBm = 0.001 watt; logbase: 10; factor: 10')
+        self.assertIsInstance(x, UnitDefinition)
+        self.assertFalse(x.is_base)
+        self.assertIsInstance(x.converter, LogarithmicConverter)
+        self.assertEqual(x.converter.scale, 0.001)
+        self.assertEqual(x.converter.logbase, 10)
+        self.assertEqual(x.converter.factor, 10)
+        self.assertEqual(x.reference, UnitsContainer(watt=1))
+
 
     def test_dimension_definition(self):
         x = DimensionDefinition('[time]', '', (), converter='')

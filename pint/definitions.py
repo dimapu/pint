@@ -12,7 +12,7 @@
 from __future__ import (division, unicode_literals, print_function,
                         absolute_import)
 
-from .converters import ScaleConverter, OffsetConverter
+from .converters import ScaleConverter, OffsetConverter, LogarithmicConverter
 from .util import UnitsContainer, _is_dim, ParserHelper
 from .compat import string_types
 
@@ -47,6 +47,8 @@ class Definition(object):
         value, aliases = result[0], tuple(result[1:])
         symbol, aliases = (aliases[0], aliases[1:]) if aliases else (None,
                                                                      aliases)
+
+        # print(name, symbol, aliases, value)  # TBR
 
         if name.startswith('['):
             return DimensionDefinition(name, symbol, aliases, value)
@@ -107,12 +109,16 @@ class UnitDefinition(Definition):
         self.is_base = is_base
         if isinstance(converter, string_types):
             if ';' in converter:
-                [converter, modifiers] = converter.split(';', 2)
+                # [converter, modifiers] = converter.split(';', 2)
+                [converter, modifiers] = converter.split(';', 1)
                 modifiers = dict((key.strip(), eval(value)) for key, value in
                                  (part.split(':')
                                   for part in modifiers.split(';')))
             else:
                 modifiers = {}
+
+            # print('converter:', converter)  # TBR
+            # print('modifiers:', modifiers)  # TBR
 
             converter = ParserHelper.from_string(converter)
             if all(_is_dim(key) for key in converter.keys()):
@@ -127,8 +133,15 @@ class UnitDefinition(Definition):
             if modifiers.get('offset', 0.) != 0.:
                 converter = OffsetConverter(converter.scale,
                                             modifiers['offset'])
+            elif modifiers.get('logbase', 1.) != 1.:
+                converter = LogarithmicConverter(converter.scale,
+                                                 modifiers['logbase'],
+                                                 modifiers['factor'])
             else:
                 converter = ScaleConverter(converter.scale)
+
+        # print('UnitDefinition.reference', self.reference)  # TBR
+        # print('converter:', converter)  # TBR
 
         super(UnitDefinition, self).__init__(name, symbol, aliases, converter)
 

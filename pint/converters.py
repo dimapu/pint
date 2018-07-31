@@ -10,7 +10,7 @@
 """
 from __future__ import (division, unicode_literals, print_function,
                         absolute_import)
-
+from math import log, pow
 
 class Converter(object):
     """Base class for value converters.
@@ -80,3 +80,41 @@ class OffsetConverter(Converter):
             value = (value - self.offset) / self.scale
 
         return value
+
+
+class LogarithmicConverter(Converter):
+    """ A converter for logarithmic units
+
+    """
+    def __init__(self, scale, logbase, factor):
+        self.scale = scale
+        self.logbase = logbase
+        self.factor = factor
+
+    @property
+    def is_multiplicative(self):
+        return False
+
+    def to_reference(self, value, inplace=False):
+        if inplace:
+            value /= self.factor
+            # TODO: not sure how to make it inplace
+            value = self.scale * pow(self.logbase, value)
+        else:
+            value = self.scale * pow(self.logbase, value / self.factor)
+
+        return value
+
+    def from_reference(self, value, inplace=False):
+        if inplace:
+            value /= self.scale
+            # TODO: not sure how to make it inplace
+            value = self.factor * log(value, self.logbase)
+        else:
+            value = self.factor * log(value / self.scale, self.logbase)
+
+        return value
+
+    def __repr__(self):
+        return('<LogarithmicConverter (scale: {}, logbase: {}, factor: {})>'
+               .format(self.scale, self.logbase, self.factor))
