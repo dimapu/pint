@@ -181,6 +181,8 @@ metric_horsepower =  75 * force_kilogram * meter / second
 electric_horsepower = 746 * watt
 hydraulic_horsepower = 550 * feet * lbf / second
 refrigeration_ton = 12000 * btu / hour = ton_of_refrigeration
+dBm = 0.001 * watt; logbase: 10; factor: 10
+dBW = 1 * watt; logbase: 10; factor: 10
 
 # Pressure
 [pressure] = [force] / [area]
