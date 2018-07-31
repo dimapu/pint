@@ -762,7 +762,12 @@ class _Quantity(PrettyIPython, SharedRegistryObject):
         offset_units_self = self._get_non_multiplicative_units()
         no_offset_units_self = len(offset_units_self)
 
+        # print('\nother: ', other)  # TBR
+        # print('\nself._check(other): ', self._check(other))  # TBR
+
         if not self._check(other):
+
+            # print('\nno_offset_units_self: ', no_offset_units_self)  # TBR
 
             if not self._ok_for_muldiv(no_offset_units_self):
                 raise OffsetUnitCalculusError(self._units,
@@ -1596,6 +1601,10 @@ class _Quantity(PrettyIPython, SharedRegistryObject):
         if no_offset_units > 1:
             is_ok = False
         if no_offset_units == 1:
+
+            # print('self._units: ', self._units)  # TBR
+            # print('self._REGISTRY.autoconvert_offset_to_baseunit: ', self._REGISTRY.autoconvert_offset_to_baseunit)  # TBR
+
             if len(self._units) > 1:
                 is_ok = False
             if (len(self._units) == 1

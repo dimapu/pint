@@ -1420,3 +1420,113 @@ class TestCompareZero(QuantityTestCase):
         self.assertTrue(q2 > 0)
         self.assertRaises(DimensionalityError, q1.__gt__,
                           ureg.Quantity(0, ''))
+
+
+class TestLogUnits(QuantityTestCase):
+    FORCE_NDARRAY = False
+
+    def test_log_quantity_creation(self):
+        x = self.Q_(4.2, 'dBm')
+
+        self.assertEqual(x.magnitude, 4.2)
+        self.assertEqual(x.units, UnitsContainer(dBm=1))
+
+        x = self.Q_(4.2, UnitsContainer(dBm=1))
+        self.assertEqual(x.magnitude, 4.2)
+        self.assertEqual(x.units, UnitsContainer(dBm=1))
+
+        x = self.Q_(4.2, self.ureg.dBm)
+        self.assertEqual(x.magnitude, 4.2)
+        self.assertEqual(x.units, UnitsContainer(dBm=1))
+
+        # x = self.Q_('4.2 * dBm')
+        # self.assertEqual(x.magnitude, 4.2)
+        # self.assertEqual(x.units, UnitsContainer(dBm=1))
+
+        x = self.Q_(self.Q_(4.2, 'dBm'))
+        self.assertEqual(x.magnitude, 4.2)
+        self.assertEqual(x.units, UnitsContainer(dBm=1))
+
+    def test_log_quantity_conversion(self):
+        p1W = self.Q_(1, 'W')
+
+        p1mW = self.Q_(1, 'mW')
+        p1kW = self.Q_(1, 'kW')
+        print('1 W = ')
+        print(p1W.to('dBW'))
+        print(p1W.to('dBm'))
+
+        print('1 mW = ')
+        print(p1mW.to('dBW'))
+        print(p1mW.to('dBm'))
+
+        print('1 kW = ')
+        print(p1kW.to('dBW'))
+        print(p1kW.to('dBm'))
+
+        x = self.Q_(0, 'dBm')
+        print('0 dBm = ')
+        print(x.to('kW'))
+        print(x.to('W'))
+        print(x.to('mW'))
+        print(x.to('uW'))
+
+        x = self.Q_(-20, 'dBm')
+        print('-20 dBm = ')
+        print(x.to('kW'))
+        print(x.to('W'))
+        print(x.to('mW'))
+        print(x.to('uW'))
+
+        x = self.Q_(20, 'dBm')
+        print('20 dBm = ')
+        print(x.to('kW'))
+        print(x.to('W'))
+        print(x.to('mW'))
+        print(x.to('uW'))
+
+        x = self.Q_(0, 'dBW')
+        print('0 dBW = ')
+        print(x.to('kW'))
+        print(x.to('W'))
+        print(x.to('mW'))
+        print(x.to('uW'))
+
+        x = self.Q_(6, 'dBV')
+        print('6 dBV = ')
+        print(x.to('V'))
+
+        x = self.Q_(3, 'dBm')
+        print('3 dBm = ')
+        print(x.to('mW'))
+
+        x = self.Q_(6, 'dBm')
+        print('6 dBm = ')
+        print(x.to('mW'))
+
+        x = self.Q_(0, 'dBu')
+        print('0 dBu = ')
+        print(x.to('V'))
+
+        x = self.Q_(0, 'dBk')
+        print('0 dBk = ')
+        print(x.to('kW'))
+
+        x = self.Q_(0, 'dBSPL')
+        print('0 dBSPL = ')
+        print(x.to('uPa'))
+
+        x = self.Q_(1, 'Pa')
+        print('1 Pa = ')
+        print(x.to('dBSPL'))
+
+        '''
+        print('\n')
+        x = self.Q_(10, 'dBW')
+        print('0 dBW = ')
+        print(x.to('kW'))
+        print(x.to('W'))
+        print(x.to('mW'))
+        print(x.to('uW'))
+        '''
+        # self.assertQuantityAlmostEqual(x.to('mW'), self.Q_(1, 'mW'))
