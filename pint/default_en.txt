@@ -104,7 +104,7 @@ statohm = 8.987554e11 * ohm
 statvolt = 2.997925e2 * volt = statV = stV
 unit_pole = 1.256637e-7 * weber
 dBV = 1000 * volt; logbase: 10; factor: 20
-dBu = 1000 * 0.775 * volt; logbase: 10; factor: 20
+dBu = 1000 * (3/5)**0.5 * volt; logbase: 10; factor: 20
 
 # Energy
 [energy] = [force] * [length]
@@ -183,9 +183,9 @@ metric_horsepower =  75 * force_kilogram * meter / second
 electric_horsepower = 746 * watt
 hydraulic_horsepower = 550 * feet * lbf / second
 refrigeration_ton = 12000 * btu / hour = ton_of_refrigeration
-dBm = watt; logbase: 10; factor: 10
-dBW = 1000 * watt; logbase: 10; factor: 10
-dBk = 1e6 * watt; logbase: 10; factor: 20
+dBm = 0.001 * watt; logbase: 10; factor: 10
+dBW = 1 * watt; logbase: 10; factor: 10
+dBk = 1e3 * watt; logbase: 10; factor: 10
 
 # Pressure
 [pressure] = [force] / [area]
