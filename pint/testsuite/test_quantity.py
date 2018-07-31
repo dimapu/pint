@@ -1459,7 +1459,7 @@ class TestLogUnits(QuantityTestCase):
         print('1 mW = ')
         print(p1mW.to('dBW'))
         print(p1mW.to('dBm'))
-
+        '''
         print('1 kW = ')
         print(p1kW.to('dBW'))
         print(p1kW.to('dBm'))
@@ -1519,7 +1519,7 @@ class TestLogUnits(QuantityTestCase):
         x = self.Q_(1, 'Pa')
         print('1 Pa = ')
         print(x.to('dBSPL'))
-
+        '''
         '''
         print('\n')
         x = self.Q_(10, 'dBW')

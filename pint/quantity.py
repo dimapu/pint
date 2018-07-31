@@ -318,6 +318,8 @@ class _Quantity(PrettyIPython, SharedRegistryObject):
             with self._REGISTRY.context(*contexts, **ctx_kwargs):
                 return self._REGISTRY.convert(self._magnitude, self._units, other)
 
+        print(f'_Quantity._convert_magnitude_not_inplace(self={self}, other={other})')  # TBR
+
         return self._REGISTRY.convert(self._magnitude, self._units, other)
 
     def _convert_magnitude(self, other, *contexts, **ctx_kwargs):
@@ -350,7 +352,11 @@ class _Quantity(PrettyIPython, SharedRegistryObject):
         """
         other = to_units_container(other, self._REGISTRY)
 
+        print(f'\nQuantity.to(self={self}, other={other}, context={contexts}, ctx_kwargs={ctx_kwargs})')  # TBR
+
         magnitude = self._convert_magnitude_not_inplace(other, *contexts, **ctx_kwargs)
+
+        print('Resulting magnitude is {}'.format(magnitude))  # TBR
 
         return self.__class__(magnitude, other)
 

@@ -701,12 +701,15 @@ class BaseRegistry(meta.with_metaclass(_Meta)):
 
         :return: converted value
         """
+        print(f'BaseRegistry.convert(value={value}, src={src}, dst={dst})')  # TBR
         src = to_units_container(src, self)
 
         dst = to_units_container(dst, self)
 
         if src == dst:
             return value
+
+        print(f'BaseRegistry.convert(): src={src}, dst={dst}')  # TBR
 
         return self._convert(value, src, dst, inplace)
 
@@ -721,7 +724,7 @@ class BaseRegistry(meta.with_metaclass(_Meta)):
 
         :return: converted value
         """
-
+        print(f'BaseRegistry._convert(value={value}, src={src}, dst={dst})')  # TBR
         if check_dimensionality:
 
             src_dim = self._get_dimensionality(src)
@@ -735,6 +738,8 @@ class BaseRegistry(meta.with_metaclass(_Meta)):
         # Here src and dst have only multiplicative units left. Thus we can
         # convert with a factor.
         factor, units = self._get_root_units(src / dst)
+
+        print(f'BaseRegistry._convert(): factor={factor}, units={units}')
 
         # factor is type float and if our magnitude is type Decimal then
         # must first convert to Decimal before we can '*' the values
@@ -976,7 +981,7 @@ class NonMultiplicativeRegistry(BaseRegistry):
 
         :return: converted value
         """
-
+        print(f'NonMultiplicativeRegistry._convert(value={value}, src={src}, dst={dst})')  # TBR
         # Conversion needs to consider if non-multiplicative (AKA offset
         # units) are involved. Conversion is only possible if src and dst
         # have at most one offset unit per dimension. Other rules are applied
@@ -1016,7 +1021,9 @@ class NonMultiplicativeRegistry(BaseRegistry):
 
         # Finally convert to offset units specified in destination
         if dst_offset_unit:
+            print(f'NonMultiplicativeRegistry._convert(): value={value}')  # TBR
             value = self._units[dst_offset_unit].converter.from_reference(value, inplace)
+            print(f'NonMultiplicativeRegistry._convert(): value={value}')  # TBR
 
         return value
 

@@ -40,6 +40,7 @@ class Definition(object):
     def from_string(cls, definition):
         """Parse a definition
         """
+        print('\n---------------\n', definition)  # TBR
         name, definition = definition.split('=', 1)
         name = name.strip()
 
@@ -48,7 +49,7 @@ class Definition(object):
         symbol, aliases = (aliases[0], aliases[1:]) if aliases else (None,
                                                                      aliases)
 
-        # print(name, symbol, aliases, value)  # TBR
+        print(name, '//', symbol, '//', aliases, '//', value)  # TBR
 
         if name.startswith('['):
             return DimensionDefinition(name, symbol, aliases, value)
@@ -107,18 +108,34 @@ class UnitDefinition(Definition):
                  reference=None, is_base=False):
         self.reference = reference
         self.is_base = is_base
+
+        print('\nUnitDefinition.__init__(): name: {}, symbol: {}, converter: {}, reference: {}'
+              .format(name, symbol, converter, reference))  # TBR
+
+        ref = None
+
         if isinstance(converter, string_types):
             if ';' in converter:
                 # [converter, modifiers] = converter.split(';', 2)
                 [converter, modifiers] = converter.split(';', 1)
-                modifiers = dict((key.strip(), eval(value)) for key, value in
+
+                print('converter after split:', converter)  # TBR
+                print('modifiers after split:', modifiers)  # TBR
+
+                modifiers = dict((key.strip(), value) for key, value in
                                  (part.split(':')
                                   for part in modifiers.split(';')))
+
+                ref = modifiers.pop('reference', converter)
+                modifiers = dict((k, eval(v)) for k, v in modifiers.items())
+                print('modifiers after dict split:', modifiers)  # TBR
+                print('ref extracted:', ref)  # TBR
             else:
                 modifiers = {}
 
-            # print('converter:', converter)  # TBR
-            # print('modifiers:', modifiers)  # TBR
+            print('\nconverter:', converter)  # TBR
+            print('modifiers:', modifiers)  # TBR
+            print('ref extracted:', ref)  # TBR
 
             converter = ParserHelper.from_string(converter)
             if all(_is_dim(key) for key in converter.keys()):
@@ -129,6 +146,11 @@ class UnitDefinition(Definition):
                 raise ValueError('Cannot mix dimensions and units in the same definition. '
                                  'Base units must be referenced only to dimensions. '
                                  'Derived units must be referenced only to units.')
+
+            print('\nconverter:', converter)  # TBR
+            print('modifiers:', modifiers)  # TBR
+            print('ref:', ref)  # TBR
+
             self.reference = UnitsContainer(converter)
             if modifiers.get('offset', 0.) != 0.:
                 converter = OffsetConverter(converter.scale,
