@@ -10,7 +10,7 @@
 """
 from __future__ import (division, unicode_literals, print_function,
                         absolute_import)
-from .compat import log, HAS_NUMPY_LOG
+from .compat import log, HAS_NUMPY
 
 
 class Converter(object):
@@ -88,7 +88,7 @@ class LogarithmicConverter(Converter):
 
     """
     def __init__(self, scale, logbase, factor):
-        if HAS_NUMPY_LOG is False:
+        if HAS_NUMPY is False:
             print("'numpy' package is not installed. Will use math.log() "
                   "for logarithmic units.")
         self.scale = scale
