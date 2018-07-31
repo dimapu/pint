@@ -123,3 +123,10 @@ except ImportError:
 
 if not HAS_PROPER_BABEL:
     Loc = babel_units = None
+
+if HAS_NUMPY:
+    from numpy import log as log
+    HAS_NUMPY_LOG = True
+else:
+    from math import log as log
+    HAS_NUMPY_LOG = False
