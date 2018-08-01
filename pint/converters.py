@@ -87,13 +87,20 @@ class LogarithmicConverter(Converter):
     """ A converter for logarithmic units
 
     """
-    def __init__(self, scale, logbase, factor):
+    def __init__(self, logreference, logbase, scale):
+        """
+
+        :param logreference: reference value in linear units
+        :param logbase:  logarithm base
+        :param scale:  scaling factor to obtain logarithmic units
+        """
+
         if HAS_NUMPY is False:
             print("'numpy' package is not installed. Will use math.log() "
                   "for logarithmic units.")
-        self.scale = scale
+        self.logreference = logreference
         self.logbase = logbase
-        self.factor = factor
+        self.scale = scale
 
     @property
     def is_multiplicative(self):
@@ -101,24 +108,24 @@ class LogarithmicConverter(Converter):
 
     def to_reference(self, value, inplace=False):
         if inplace:
-            value /= self.factor
+            value /= self.scale
             # TODO: not sure how to make it inplace
-            value = self.factor * log(value) / log(self.logbase)
+            value = self.logreference * pow(self.logbase, value)
         else:
-            value = self.factor * log(value / self.scale) / log(self.logbase)
+            value = self.logreference * pow(self.logbase, value / self.scale)
 
         return value
 
     def from_reference(self, value, inplace=False):
         if inplace:
-            value /= self.scale
+            value /= self.logreference
             # TODO: not sure how to make it inplace
-            value = self.factor * log(value, self.logbase)
+            value = self.scale * log(value) / log(self.logbase)
         else:
-            value = self.factor * log(value / self.scale, self.logbase)
+            value = self.scale * log(value / self.logreference) / log(self.logbase)
 
         return value
 
     def __repr__(self):
-        return('<LogarithmicConverter (scale: {}, logbase: {}, factor: {})>'
-               .format(self.scale, self.logbase, self.factor))
+        return('<LogarithmicConverter (logreference: {}, logbase: {}, scale: {})>'
+               .format(self.logreference, self.logbase, self.scale))

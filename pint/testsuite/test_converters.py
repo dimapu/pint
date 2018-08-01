@@ -45,7 +45,7 @@ class TestConverter(BaseTestCase):
         self.assertEqual(c.to_reference(c.from_reference(100)), 100)
 
         # converter for dBm
-        c = LogarithmicConverter(0.001, 10, 10)
+        c = LogarithmicConverter(logreference=0.001, logbase=10, scale=10)
         self.assertAlmostEqual(c.from_reference(1e-3), 0)  # 1 mW is 0 dBm
         self.assertAlmostEqual(c.from_reference(10 * 1e-3), 10)  # 10 mW is 10 dBm
         self.assertAlmostEqual(c.from_reference(0.1 * 1e-3), -10)  # 0.1 mW is -10 dBm
