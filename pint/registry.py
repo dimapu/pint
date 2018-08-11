@@ -981,7 +981,9 @@ class NonMultiplicativeRegistry(BaseRegistry):
 
         :return: converted value
         """
-        print(f'NonMultiplicativeRegistry._convert(value={value}, src={src}, dst={dst})')  # TBR
+        print(f'NonMultiplicativeRegistry._convert(value={value}:{type(value)}, src={src}:{type(src)}, dst={dst}:{type(dst)})')  # TBR
+        # print(dir(src))  # TBR
+
         # Conversion needs to consider if non-multiplicative (AKA offset
         # units) are involved. Conversion is only possible if src and dst
         # have at most one offset unit per dimension. Other rules are applied
@@ -1002,14 +1004,22 @@ class NonMultiplicativeRegistry(BaseRegistry):
         src_dim = self._get_dimensionality(src)
         dst_dim = self._get_dimensionality(dst)
 
+        print(f'NonMultiplicativeReg._convert(): src_dim:{src_dim}, dst_dim:{dst_dim}')  # TBR
+
         # If the source and destination dimensionality are different,
         # then the conversion cannot be performed.
         if src_dim != dst_dim:
             raise DimensionalityError(src, dst, src_dim, dst_dim)
 
+        print(f'NonMultiplicativeReg._convert(): src_offset_unit:{src_offset_unit}, dst_offset_unit:{dst_offset_unit}')  # TBR
+
         # clean src from offset units by converting to reference
         if src_offset_unit:
+            print(f'NonMultiplicativeReg._convert(): {self._units[src_offset_unit]}')  # TBR
+            print(f'NonMultiplicativeReg._convert(): {self._units[src_offset_unit].converter}')  # TBR
             value = self._units[src_offset_unit].converter.to_reference(value, inplace)
+
+        print(f'NonMultiplicativeReg._convert(): after to_reference() value={value}')  # TBR
 
         src = src.remove([src_offset_unit])
 
@@ -1017,11 +1027,16 @@ class NonMultiplicativeRegistry(BaseRegistry):
         dst = dst.remove([dst_offset_unit])
 
         # Convert non multiplicative units to the dst.
+        print(
+            f'NonMultiplicativeReg._convert(): src={src}, dst={dst}')  # TBR
         value = super(NonMultiplicativeRegistry, self)._convert(value, src, dst, inplace, False)
+        print(f'NonMultiplicativeReg._convert(): after _convert() value={value}')  # TBR
 
         # Finally convert to offset units specified in destination
         if dst_offset_unit:
-            print(f'NonMultiplicativeRegistry._convert(): value={value}')  # TBR
+            print(f'NonMultiplicativeReg._convert(): {self._units[dst_offset_unit]}')  # TBR
+            print(f'NonMultiplicativeReg._convert(): {self._units[dst_offset_unit].converter}')  # TBR
+
             value = self._units[dst_offset_unit].converter.from_reference(value, inplace)
             print(f'NonMultiplicativeRegistry._convert(): value={value}')  # TBR
 

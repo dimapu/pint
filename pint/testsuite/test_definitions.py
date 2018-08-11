@@ -71,36 +71,39 @@ class TestDefinition(BaseTestCase):
         self.assertEqual(x.converter.offset, 255.372222)
         self.assertEqual(x.reference, UnitsContainer(kelvin=1))
 
-        x = Definition.from_string('dBm = mW; logbase: 10; factor: 10')
+    def test_log_unit_definition(self):
 
-        x = Definition.from_string('dBm = 1; logbase: 10; reference: 1 milliwatt')
+        # x = Definition.from_string('dBm = 10; logbase: 10; logreference: 1 mW')
+        # x = Definition.from_string('dBW = 10; logbase: 10; logreference: 1 W')
 
-        x = Definition.from_string('dBW = W; logbase: 10; factor: 10')
+        # x = Definition.from_string('dBm = 1 mW; logbase: 10; factor: 10')
+        # x = Definition.from_string('dBW = 1 W; logbase: 10; factor: 10')
 
-        x = Definition.from_string('dBV = V; logbase: 10; factor: 20')
+        # x = Definition.from_string('dBV = 20; logbase: 10; logreference: 1 V')
+        # x = Definition.from_string('dBSPL = 20; logbase: 10; logreference: 20 * uPa')
+        # x = Definition.from_string('dBu = 20; logbase: 10; logreference: 1000 * (3/5)**0.5 * volt')
+        # x = Definition.from_string('dBm = 10; logbase: 10; logreference: 0.001 * watt')
 
-        x = Definition.from_string('dBSPL = 20 * uPa; logbase: 10; factor: 20')
-
-        x = Definition.from_string('dBu = 1000 * (3/5)**0.5 * volt; logbase: 10; factor: 20')
-
-        x = Definition.from_string('dBm = 0.001 * watt; logbase: 10; factor: 10')
+        '''
+        x = Definition.from_string('dBm = 1 mW; logbase: 10; factor: 10')
+        print(x.converter)  # TBR
         self.assertIsInstance(x, UnitDefinition)
         self.assertFalse(x.is_base)
         self.assertIsInstance(x.converter, LogarithmicConverter)
-        self.assertEqual(x.converter.scale, 0.001)
+        self.assertEqual(x.converter.logreference, 0.001)
         self.assertEqual(x.converter.logbase, 10)
-        self.assertEqual(x.converter.factor, 10)
-        self.assertEqual(x.reference, UnitsContainer(watt=1))
+        self.assertEqual(x.converter.scale, 10)
+        self.assertEqual(x.reference, UnitsContainer(W=0.001))
+        '''
 
-        x = Definition.from_string('dBm = milliwatt; logbase: 10; factor: 10')
+        x = Definition.from_string('dBW = 1 W; logbase: 10; factor: 10')
         self.assertIsInstance(x, UnitDefinition)
         self.assertFalse(x.is_base)
         self.assertIsInstance(x.converter, LogarithmicConverter)
-        self.assertEqual(x.converter.scale, 1)
+        self.assertEqual(x.converter.logreference, 1)
         self.assertEqual(x.converter.logbase, 10)
-        self.assertEqual(x.converter.factor, 10)
-        self.assertEqual(x.reference, UnitsContainer(milliwatt=1))
-
+        self.assertEqual(x.converter.scale, 10)
+        self.assertEqual(x.reference, UnitsContainer(W=1))
 
     def test_dimension_definition(self):
         x = DimensionDefinition('[time]', '', (), converter='')

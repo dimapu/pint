@@ -126,6 +126,8 @@ class UnitDefinition(Definition):
                                  (part.split(':')
                                   for part in modifiers.split(';')))
 
+                print('modifiers after split 2:', modifiers)  # TBR
+
                 ref = modifiers.pop('reference', converter)
                 modifiers = dict((k, eval(v)) for k, v in modifiers.items())
                 print('modifiers after dict split:', modifiers)  # TBR
@@ -148,6 +150,7 @@ class UnitDefinition(Definition):
                                  'Derived units must be referenced only to units.')
 
             print('\nconverter:', converter)  # TBR
+            print('type(converter):', type(converter))  # TBR
             print('modifiers:', modifiers)  # TBR
             print('ref:', ref)  # TBR
 
@@ -162,7 +165,7 @@ class UnitDefinition(Definition):
             else:
                 converter = ScaleConverter(converter.scale)
 
-        # print('UnitDefinition.reference', self.reference)  # TBR
+        print('UnitDefinition.reference', self.reference)  # TBR
         # print('converter:', converter)  # TBR
 
         super(UnitDefinition, self).__init__(name, symbol, aliases, converter)
