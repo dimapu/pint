@@ -1004,14 +1004,14 @@ class NonMultiplicativeRegistry(BaseRegistry):
         src_dim = self._get_dimensionality(src)
         dst_dim = self._get_dimensionality(dst)
 
-        print(f'NonMultiplicativeReg._convert(): src_dim:{src_dim}, dst_dim:{dst_dim}')  # TBR
+        print(f'NonMultiplicativeReg._convert(): src_dim={src_dim}, dst_dim={dst_dim}')  # TBR
 
         # If the source and destination dimensionality are different,
         # then the conversion cannot be performed.
         if src_dim != dst_dim:
             raise DimensionalityError(src, dst, src_dim, dst_dim)
 
-        print(f'NonMultiplicativeReg._convert(): src_offset_unit:{src_offset_unit}, dst_offset_unit:{dst_offset_unit}')  # TBR
+        print(f'NonMultiplicativeReg._convert(): src_offset_unit={src_offset_unit}, dst_offset_unit={dst_offset_unit}')  # TBR
 
         # clean src from offset units by converting to reference
         if src_offset_unit:
@@ -1030,7 +1030,7 @@ class NonMultiplicativeRegistry(BaseRegistry):
         print(
             f'NonMultiplicativeReg._convert(): src={src}, dst={dst}')  # TBR
         value = super(NonMultiplicativeRegistry, self)._convert(value, src, dst, inplace, False)
-        print(f'NonMultiplicativeReg._convert(): after _convert() value={value}')  # TBR
+        print(f'NonMultiplicativeReg._convert(): after super()._convert() value={value}')  # TBR
 
         # Finally convert to offset units specified in destination
         if dst_offset_unit:
